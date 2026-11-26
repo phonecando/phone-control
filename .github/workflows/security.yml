@@ -37,7 +37,7 @@ jobs:
       # read the job summary. Phone control is source-available and must not
       # embed network-copyleft code, so AGPL and SSPL are denied.
       - name: Review dependency changes
-        uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        uses: actions/dependency-review-action@bbc44d14a204704ccc493733616cd1e93a0321ec # v5.0.1
         with:
           fail-on-severity: high
           deny-licenses: AGPL-1.0-only, AGPL-1.0-or-later, AGPL-3.0-only, AGPL-3.0-or-later, SSPL-1.0
@@ -55,7 +55,7 @@ jobs:
       actions: read # codeql upload-sarif reads the run (codeql-action#2117)
       contents: read
       security-events: write # upload SARIF to code scanning
-    uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@b1d267aea5211fa648d9d442fa64b90dbdcbdd36 # v2.7.0
+    uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable.yml@32d3cd482bdadfb38b186c0ad1b031902d55d932 # v2.7.1
     with:
       scan-args: |-
         --recursive
@@ -69,7 +69,7 @@ jobs:
       actions: read # codeql upload-sarif reads the run (codeql-action#2117)
       contents: read
       security-events: write # upload SARIF to code scanning
-    uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable-pr.yml@b1d267aea5211fa648d9d442fa64b90dbdcbdd36 # v2.7.0
+    uses: google/osv-scanner-action/.github/workflows/osv-scanner-reusable-pr.yml@32d3cd482bdadfb38b186c0ad1b031902d55d932 # v2.7.1
     with:
       scan-args: |-
         --recursive
