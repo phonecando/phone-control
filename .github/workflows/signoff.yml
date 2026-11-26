@@ -1,0 +1,40 @@
+name: Sign-off
+
+# LICENSE section 7: a contribution is given under that section, and its
+# pull request's commits are signed off (git commit -s) as the contributor's
+# record that they agree. This checks every commit of each pull request
+# (bots' excepted) carries a Signed-off-by line with a name and an email.
+# Branch protection: require `signed off`.
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  signoff:
+    name: signed off
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          package-manager-cache: false
+      - name: Sign-off rules (node --test)
+        run: node --test .github/ci/signoff/rules.test.mjs
+      - name: Every commit signed off
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          AUTHOR_TYPE: ${{ github.event.pull_request.user.type }}
+        run: node .github/ci/signoff/check.mjs

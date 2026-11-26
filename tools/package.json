@@ -1,0 +1,14 @@
+{
+  "name": "phone-control-tools",
+  "version": "0.1.0",
+  "private": true,
+  "description": "The phone_* tools an agent calls to use an Android phone, over a loopback bridge. Zero dependencies.",
+  "license": "SEE LICENSE IN ../LICENSE",
+  "type": "module",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "test": "node --test \"*.test.mjs\""
+  }
+}

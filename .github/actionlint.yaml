@@ -1,0 +1,8 @@
+# actionlint config (read by actionlint from .github/; security.yml runs it).
+# Kept minimal on purpose: every other shellcheck finding in `run:` blocks,
+# including info-level quoting (SC2086), stays an error.
+paths:
+  .github/workflows/**/*.{yml,yaml}:
+    ignore:
+      # Pure style hint ("group redirects with { ...; } >> file").
+      - 'shellcheck reported issue in this script: SC2129:.+'

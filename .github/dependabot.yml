@@ -1,0 +1,50 @@
+# Dependabot version updates for phone control, monthly and grouped (one
+# pull request per ecosystem a month at most). Security updates stay on (the
+# repository's Dependabot security updates setting) and skip the schedule,
+# the groups and the cooldown. Every updater waits 7 days after a release
+# before proposing it: fresh releases are where regressions and hijacked
+# packages show up. engine/consumer-sample is a separate build that resolves
+# the unpublished com.phonecando.pce artifacts, so Dependabot cannot update
+# it. tools/ has no dependencies.
+
+version: 2
+
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: ci(deps)
+    groups:
+      # Pinned SHAs + version comments, all in one PR.
+      actions:
+        patterns: ['*']
+
+  - package-ecosystem: gradle
+    directory: /engine
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: chore(deps)
+    groups:
+      # Kotlin Gradle plugins (jvm/android/serialization) share one version.
+      kotlin:
+        patterns:
+          - org.jetbrains.kotlin.*
+          - org.jetbrains.kotlin:*
+      android-gradle-plugin:
+        patterns:
+          - com.android.*
+      # api and aidl are one release.
+      shizuku:
+        patterns:
+          - dev.rikka.shizuku:*
+      engine-other:
+        patterns: ['*']
