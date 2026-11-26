@@ -161,8 +161,10 @@ function coordinates(raw) {
 
 // A test-scope edge may only reach pure modules, never one that already
 // depends on `mod` (a reverse edge), and testkit never reaches core (§5).
+// A module's own main dependencies are on its test classpath anyway (a
+// host-side library like service tests against android and keystore).
 function testEdgeProblem(mod, target) {
-  if (target === mod) return null;
+  if (target === mod || closure(mod).has(target)) return null;
   if (!PURE.includes(target)) return `test code may only depend on pure modules (${PURE.join(', ')})`;
   if (closure(target).has(mod)) return `reverse edge: ${target} already depends on ${mod}`;
   if (mod === 'testkit' && target === 'core') return 'testkit must not depend on core (§5)';
