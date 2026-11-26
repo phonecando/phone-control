@@ -33,7 +33,7 @@ dependencies {
     implementation(project(":json"))
     implementation(project(":android"))
     implementation(project(":keystore"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0")
 }
 
 afterEvaluate {

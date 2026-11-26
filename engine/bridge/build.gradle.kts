@@ -11,10 +11,10 @@ kotlin {
 dependencies {
     api(project(":gates"))
     // Android's own org.json at run time; the JVM tests bring the real one.
-    compileOnly("org.json:json:20250517")
+    compileOnly("org.json:json:20260814")
 
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.json:json:20250517")
+    testImplementation("org.json:json:20260814")
     testImplementation(testFixtures(project(":gates")))
 }
 
