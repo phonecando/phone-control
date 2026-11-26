@@ -137,7 +137,9 @@ class TestActivity : Activity() {
                     "unexpected package ${initial.packageName}"
                 }
                 check(initial.activityName?.endsWith("TestActivity") == true) {
-                    "unexpected activity ${initial.activityName}"
+                    val events = service.windowEvents.toList()
+                    "unexpected activity ${initial.activityName}; window-state events since connect: " +
+                        (events.takeLast(5).joinToString("; ").ifEmpty { "none" })
                 }
 
                 pce.act(

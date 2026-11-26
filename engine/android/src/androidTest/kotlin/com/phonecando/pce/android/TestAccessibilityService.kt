@@ -30,11 +30,20 @@ class TestAccessibilityService : AccessibilityService() {
     @Volatile
     var activityName: String? = null
 
+    // Every window-state event since the service connected, as "pkg/cls
+    // (activity|not an activity)", newest last: a harness that finds no
+    // activity says what Android sent instead.
+    val windowEvents: MutableList<String> = java.util.Collections.synchronizedList(mutableListOf())
+
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event?.eventType != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) return
-        val pkg = event.packageName?.toString() ?: return
-        val cls = event.className?.toString() ?: return
-        if (!isActivity(pkg, cls)) return
+        val pkg = event.packageName?.toString()
+        val cls = event.className?.toString()
+        val activity = pkg != null && cls != null && isActivity(pkg, cls)
+        val seen = "$pkg/$cls (${if (activity) "activity" else "not an activity"})"
+        windowEvents += seen
+        Log.i("A11yDeviceTest", "window state: $seen")
+        if (!activity) return
         activityPackage = pkg
         activityName = cls
     }
