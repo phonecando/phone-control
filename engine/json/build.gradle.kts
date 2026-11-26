@@ -1,7 +1,7 @@
 plugins {
     `java-library`
     kotlin("jvm")
-    kotlin("plugin.serialization") version "2.2.10"
+    kotlin("plugin.serialization") version "2.4.21"
     `maven-publish`
 }
 
@@ -11,10 +11,10 @@ kotlin {
 
 dependencies {
     api(project(":api"))
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.13.0")
 
     testImplementation(kotlin("test-junit5"))
-    testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
+    testImplementation("org.junit.jupiter:junit-jupiter:6.1.3")
     testImplementation(project(":core"))
     testImplementation(project(":testkit"))
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
