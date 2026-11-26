@@ -1,0 +1,14 @@
+# The engine's Gradle plugin versions, in one place. consumer-sample, a
+# separate build, reads this file too (its settings.gradle.kts), so the
+# Kotlin it compiles with always matches the one that compiled the
+# published artifacts: a newer compiler writes metadata an older one
+# can't read.
+[versions]
+kotlin = "2.2.10"
+agp = "9.2.1"
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+android-library = { id = "com.android.library", version.ref = "agp" }
