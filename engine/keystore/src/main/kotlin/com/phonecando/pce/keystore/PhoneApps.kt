@@ -1,0 +1,77 @@
+package com.phonecando.pce.keystore
+
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.SystemClock
+
+// What the phone says about its apps, for the app-access gates: an
+// app's name, the app a link opens in, and the apps nobody is asked about
+// (PhoneCanDo itself and the default home screen, read each time as the
+// user may change it).
+// [clock]: when the name index was read, elapsedRealtime by default.
+class PhoneApps(context: Context, private val clock: () -> Long = SystemClock::elapsedRealtime) {
+  private val own = context.packageName
+  private val pm = context.packageManager
+
+  fun exempt(pkg: String): Boolean = pkg == own || isHome(pkg)
+
+  fun isHome(pkg: String): Boolean = pkg == homeScreen()
+
+  // Falls back to the package when Android hides the app from us.
+  fun label(pkg: String): String = try {
+    pm.getApplicationLabel(pm.getApplicationInfo(pkg, 0)).toString().ifBlank { pkg }
+  } catch (_: Exception) {
+    pkg
+  }
+
+  // Every app whose name is [label] (an app's name is all a notification
+  // row shows of it). Read from the apps with a launcher icon, the ones
+  // Android lets us see, at most once a minute; none: no app has that name.
+  fun named(label: String): List<String> {
+    val now = clock()
+    val index = names?.takeIf { now - namesAt < NAMES_MS } ?: readNames().also {
+      names = it
+      namesAt = now
+    }
+    return index[label.trim()].orEmpty()
+  }
+
+  @Volatile private var names: Map<String, List<String>>? = null
+
+  @Volatile private var namesAt = 0L
+
+  private fun readNames(): Map<String, List<String>> = try {
+    val launcher = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
+    val apps = pm.queryIntentActivities(launcher, 0).map { it.activityInfo.packageName }.toSet() + own
+    apps.groupBy { label(it).trim() }
+  } catch (_: Exception) {
+    emptyMap()
+  }
+
+  // The app Android would hand this link to; null when it can't say: no
+  // app, its chooser (the "android" package: you pick), or an app Android
+  // hides from us. Then the agent's first look inside asks instead.
+  fun linkHandler(url: String): String? = try {
+    val view = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    pm.resolveActivity(view, PackageManager.MATCH_DEFAULT_ONLY)?.activityInfo?.packageName
+      ?.takeIf { it != "android" }
+  } catch (_: Exception) {
+    null
+  }
+
+  // The default launcher; null while none is set (Android's chooser, the
+  // "android" package, answers then, and it is never exempt).
+  private fun homeScreen(): String? = try {
+    val home = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
+    pm.resolveActivity(home, PackageManager.MATCH_DEFAULT_ONLY)?.activityInfo?.packageName
+      ?.takeIf { it != "android" }
+  } catch (_: Exception) {
+    null
+  }
+
+  private companion object {
+    const val NAMES_MS = 60_000L
+  }
+}
