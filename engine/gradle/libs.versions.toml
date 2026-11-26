@@ -4,7 +4,7 @@
 # published artifacts: a newer compiler writes metadata an older one
 # can't read.
 [versions]
-kotlin = "2.2.10"
+kotlin = "2.4.21"
 agp = "9.2.1"
 
 [plugins]
