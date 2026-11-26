@@ -5,7 +5,9 @@
 # before proposing it: fresh releases are where regressions and hijacked
 # packages show up. engine/consumer-sample is a separate build that resolves
 # the unpublished com.phonecando.pce artifacts, so Dependabot cannot update
-# it. tools/ has no dependencies.
+# it; it takes its Kotlin from engine/gradle/libs.versions.toml, which the
+# kotlin group below bumps, so it always compiles with the Kotlin that built
+# what it consumes. tools/ has no dependencies.
 
 version: 2
 

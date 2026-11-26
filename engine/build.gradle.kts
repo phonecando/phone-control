@@ -1,7 +1,9 @@
 plugins {
-    kotlin("jvm") version "2.2.10" apply false
-    kotlin("android") version "2.2.10" apply false
-    id("com.android.library") version "9.2.1" apply false
+    // Versions in gradle/libs.versions.toml, which consumer-sample shares.
+    alias(libs.plugins.kotlin.jvm) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.android.library) apply false
 }
 
 allprojects {
